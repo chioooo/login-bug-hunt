@@ -1,9 +1,11 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { defer, delay, Observable, of, switchMap, tap, throwError } from 'rxjs';
 import { LoginRequest, LoginResponse } from './models/login.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private readonly router = inject(Router);
   private readonly tokenKey = 'token';
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
@@ -20,4 +22,18 @@ export class AuthService {
       );
     }).pipe(tap((response) => localStorage.setItem(this.tokenKey, response.token)));
   }
+
+  logout(): void {
+    localStorage.removeItem(this.tokenKey);
+    this.router.navigate(['/login']);
+  }
+
+  isAuthenticated(): boolean {
+    return !!this.getToken();
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem(this.tokenKey);
+  }
 }
+
