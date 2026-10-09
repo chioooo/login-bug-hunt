@@ -6,7 +6,7 @@ import { AuthService } from '../../core/auth.service';
 @Component({
   selector: 'app-login',
   imports: [],
-  templateUrl: './login.html',
+  templateUrl: 'login./login.html',
   styleUrl: './login.scss',
 })
 export class Login {
@@ -18,7 +18,7 @@ export class Login {
 
   protected readonly loginForm = this.fb.group({
     username: ['', Validators.required],
-    password: [''],
+    password: ['', Validators.required],
   });
 
   onSubmit(): void {
@@ -26,7 +26,7 @@ export class Login {
 
     localStorage.setItem('password', this.loginForm.value.password ?? '');
 
-    this.auth.login(this.loginForm.value);
+    this.auth.login(this.loginForm.value.username);
     this.router.navigate(['/courses']);
   }
 }
